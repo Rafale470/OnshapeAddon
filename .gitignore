@@ -1,4 +1,6 @@
 credential.py
 material_list.py
 white_list.py
-/__pycache__
+/__pycache__/
+/output/*
+!/output/FICHIER_CSV_ICI.txt
