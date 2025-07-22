@@ -76,7 +76,7 @@ def get_nomenclature(url, nom_fichier):
                 })
     
     df = pd.DataFrame(final_result)
-    df.to_csv(f"output/{nom_fichier}.csv", index=False)
+    df.to_csv(f"{nom_fichier}.csv", index=False)
     
     return final_result
 
