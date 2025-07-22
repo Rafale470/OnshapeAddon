@@ -4,6 +4,9 @@ from collections import defaultdict
 from credential import AUTH
 from white_list import WHITE_LIST
 from material_list import MATERIAL_LIST
+from tri import couverture
+from mise_en_kit import import_kit
+import csv
 
 BASE_URL = "https://cad.onshape.com"
 TEST = "https://cad.onshape.com/documents/e4b6852c1aeadb87d10fe119/w/6a95673077b4f5c97ba43d70/e/3bc37e4643c68313f8e23eed"
@@ -69,16 +72,29 @@ def get_nomenclature(url, nom_fichier):
     for (doc_id, elem_id, wvm_type, wvm_id, display_name), parts in grouped.items():
         if display_name not in MATERIAL_LIST:
             for (name, number), count in parts.items():
+                number1, number2 = number.strip().split()
                 final_result.append({
                     "Nom": name,
-                    "Numéro de pièce": number,
+                    "Numéro de pièce": number1,
+                    "Référence": number2,
                     "Nombre": count
                 })
     
-    df = pd.DataFrame(final_result)
-    df.to_csv(f"{nom_fichier}.csv", index=False)
+    list_kit_order = import_kit()
+    list_kit, list_piece = couverture(final_result,list_kit_order)
     
-    return final_result
+    with open(nom_fichier, mode="w", newline="", encoding="utf-8") as f:
+        writer = csv.writer(f)
+        
+        writer.writerow(["Type", "Référence", "Nom", "Nombre"])
+        
+        for (ref, nom), quantite in list_kit.items():
+            writer.writerow(["Kit", ref, nom, quantite])
+        
+        writer.writerow([])
+
+        for _, piece in list_piece.items():
+            writer.writerow(["Pièce", piece["Référence"], piece["Nom"], piece["Nombre"]])
 
 if __name__ == "__main__" :
     print(get_nomenclature(TEST, "test"))
