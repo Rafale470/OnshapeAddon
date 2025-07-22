@@ -1,7 +1,9 @@
 import requests
 import pandas as pd
 from collections import defaultdict
-from credential import ACCESS_KEY, SECRET_KEY
+from credential import AUTH
+from white_list import WHITE_LIST
+from material_list import MATERIAL_LIST
 
 BASE_URL = "https://cad.onshape.com"
 TEST = "https://cad.onshape.com/documents/e4b6852c1aeadb87d10fe119/w/6a95673077b4f5c97ba43d70/e/3bc37e4643c68313f8e23eed"
@@ -16,7 +18,7 @@ def get_nomenclature(url, nom_fichier):
 
     head = {
     "accept": "application/json;charset=UTF-8; qs=0.09",
-    "Authorization": "Basic Nk5HVUpmSlpQeXFxUEZKOFpjYmRvSDRiOkpiUm5mYmRhb2tpQVNwd09PZlpqdHZJOXdlMFVucGhiSXNxZGpUTGxsWU00OUsyUw==",
+    "Authorization": f"Basic {AUTH}",
     }
     
     try:
@@ -31,6 +33,11 @@ def get_nomenclature(url, nom_fichier):
     for row in data.get("rows", []):
         item = row.get("itemSource", {})
         headers = row.get("headerIdToValue", {})
+        number = headers.get("57f3fb8efa3416c06701d60f") or "UNKNOWN"
+    
+        if not item.get("partId") and number not in WHITE_LIST:  
+            print(f"Ignored: {headers.get("57f3fb8efa3416c06701d60d") or "UNKNOWN"}")
+            continue
 
         full_data.append({
             "documentId": item.get("documentId"),
@@ -38,7 +45,7 @@ def get_nomenclature(url, nom_fichier):
             "wvmType": item.get("wvmType"),
             "wvmId": item.get("wvmId"),
             "name": headers.get("57f3fb8efa3416c06701d60d") or "UNKNOWN",
-            "number" : headers.get("57f3fb8efa3416c06701d60f") or "UNKNOWN",
+            "number" : number,
             "displayName": (
                 headers.get("57f3fb8efa3416c06701d615", {}).get("displayName")
                 if isinstance(headers.get("57f3fb8efa3416c06701d615"), dict)
@@ -58,20 +65,9 @@ def get_nomenclature(url, nom_fichier):
         )
         grouped[key][(entry["name"], entry["number"])] += entry["occurrences"]
 
-    material = [
-        "CP15 bouleau Brut",
-        "CP9 bouleau Brut",
-        "CP15.5 bouleau FILM",
-        "CP9.5 bouleau FILM",
-        "CP16.4 bouleau STRAT_1",
-        "CP16.4 bouleau STRAT_2",
-        "CP15 bouleau CC",
-        "CP15 bouleau EB"
-    ]
-
     final_result = []
     for (doc_id, elem_id, wvm_type, wvm_id, display_name), parts in grouped.items():
-        if display_name not in material:
+        if display_name not in MATERIAL_LIST:
             for (name, number), count in parts.items():
                 final_result.append({
                     "Nom": name,
