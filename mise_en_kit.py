@@ -17,7 +17,8 @@ def import_kit():
         if (row[0], clean_key(row[1])) not in dic_kit:
             dic_kit[(row[0], clean_key(row[1]))] = {"name":(row[0], clean_key(row[1]))}
         if row[11] != 32 and row[11] != 13:
-            dic_kit[(row[0], clean_key(row[1]))][row[6]] = row[9]
+            key = str(row[6])
+            dic_kit[(row[0], clean_key(row[1]))][key] = row[9]
                 
     df = pd.read_csv("prio.csv", encoding="latin1")
 

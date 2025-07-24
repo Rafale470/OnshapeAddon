@@ -1,4 +1,7 @@
 credential.py
 material_list.py
 white_list.py
+prio.csv
+export_bom.csv
+test.txt
 /__pycache__/
