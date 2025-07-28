@@ -83,7 +83,7 @@ def get_nomenclature(url, nom_fichier):
     list_kit_order = import_kit()
     list_kit, list_piece = couverture(final_result,list_kit_order)
     
-    with open(f"{nom_fichier}.txt", mode="w", newline="", encoding="utf-8") as f:
+    with open(f"{nom_fichier}.csv", mode="w", newline="", encoding="utf-8") as f:
         writer = csv.writer(f)
         
         writer.writerow(["Type", "Reference", "Nom", "Nombre"])
