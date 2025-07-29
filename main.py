@@ -6,8 +6,11 @@ from nomenclature import get_nomenclature
 from init import clean
 
 def lancer_traitement(url, nom_fichier):
-    get_nomenclature(url, nom_fichier)
-    QMessageBox.information(None, "Succès", f"Traitement lancé pour :\n{url}\n→ {nom_fichier}.csv")
+    try:
+        get_nomenclature(url, nom_fichier)
+        QMessageBox.information(None, "Succès", f"Traitement lancé pour :\n{url}\n→ {nom_fichier}.csv")
+    except Exception as e:
+        QMessageBox.critical(None, "Erreur", f"Erreur lors de l'execution :\n{str(e)}")
 
 def lancer_clean(nom_fichier):
     try:
