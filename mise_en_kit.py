@@ -1,5 +1,6 @@
 import pandas as pd 
 import unicodedata
+from black_list import BLACK_LIST
 
 def import_kit():
 
@@ -16,7 +17,7 @@ def import_kit():
     for i , row in df.iterrows():
         if (row[0], clean_key(row[1])) not in dic_kit:
             dic_kit[(row[0], clean_key(row[1]))] = {"name":(row[0], clean_key(row[1]))}
-        if row[11] != 32 and row[11] != 13:
+        if row[11] != 32 and row[11] != 13 and str(row[6]) not in BLACK_LIST:
             key = str(row[6])
             dic_kit[(row[0], clean_key(row[1]))][key] = row[9]
                 

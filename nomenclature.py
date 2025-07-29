@@ -9,7 +9,7 @@ from mise_en_kit import import_kit
 import csv
 
 BASE_URL = "https://cad.onshape.com"
-TEST = "https://cad.onshape.com/documents/518c57250df4aa731b9cb0bf/w/ffe2ebf53b30ec86fbb8a2aa/e/f00795de50116849098ca90a"
+TEST = "https://cad.onshape.com/documents/cf77df69727a79b4260ec223/w/129fa290abf3f44098958c1c/e/8fffd41d48f03b74f39fabf0"
 
 def get_ids_from_url(url):
     parties = url.split("/")
@@ -18,6 +18,7 @@ def get_ids_from_url(url):
 def get_nomenclature(url, nom_fichier):
     did, wvm, wvmid, eid = get_ids_from_url(url)
     req = f"https://cad.onshape.com/api/v12/assemblies/d/{did}/{wvm}/{wvmid}/e/{eid}/bom?indented=true&multiLevel=true&generateIfAbsent=true&includeExcluded=false&ignoreSubassemblyBomBehavior=false&includeItemMicroversions=false&includeTopLevelAssemblyRow=false&thumbnail=false"
+    print(req)
     head = {
     "accept": "application/json;charset=UTF-8; qs=0.09",
     "Authorization": f"Basic {AUTH}",
@@ -97,4 +98,4 @@ def get_nomenclature(url, nom_fichier):
             writer.writerow(["Piece", piece["Reference"], piece["Nom"], piece["Nombre"]])
 
 if __name__ == "__main__" :
-    print(get_nomenclature(TEST, "test"))
+    print(get_nomenclature(TEST, "test3"))
