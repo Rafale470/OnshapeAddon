@@ -1,6 +1,7 @@
 credential.py
 material_list.py
 white_list.py
+black_list.py
 test.txt
 *.csv
 /__pycache__/

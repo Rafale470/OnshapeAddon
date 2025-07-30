@@ -9,7 +9,7 @@ def remove_accents(input_str):
     return input_str
 
 def clean(nom_fichier):
-    df = pd.read_csv(f"{nom_fichier}.csv", encoding='utf-8-sig')
+    df = pd.read_csv(f"{nom_fichier}.csv", encoding='latin1')
     df_clean = df.applymap(remove_accents)
     df_clean.to_csv("export_bom.csv", index=False)
 
@@ -18,7 +18,7 @@ def clean(nom_fichier):
     priorite_path = "prio.csv"
     if os.path.exists(priorite_path):
         try:
-            df_old = pd.read_csv(priorite_path, encoding='utf-8-sig')
+            df_old = pd.read_csv(priorite_path, encoding='latin1')
             df_old = df_old.applymap(remove_accents)
             df_3_colonnes = pd.merge(
                 df_3_colonnes,
@@ -36,6 +36,11 @@ def clean(nom_fichier):
 
     df_3_colonnes.to_csv(priorite_path, index=False, encoding='utf-8-sig')
 
+def full_clean(nom_fichier):
+    df = pd.read_csv(f"{nom_fichier}.csv", encoding='utf-8')
+    df_sans_accents = df.applymap(remove_accents)
+    df_sans_accents.to_csv(f"{nom_fichier}.csv", index=False)
 
 if __name__ == "__main__":
-    clean("test")  
+    clean("test")
+    full_clean("BOM of Assembly 1(3)") 

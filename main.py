@@ -7,7 +7,7 @@ from init import clean
 
 def lancer_traitement(url, nom_fichier):
     try:
-        get_nomenclature(url, nom_fichier)
+        get_nomenclature(nom_fichier, 0, url)
         QMessageBox.information(None, "Succès", f"Traitement lancé pour :\n{url}\n→ {nom_fichier}.csv")
     except Exception as e:
         QMessageBox.critical(None, "Erreur", f"Erreur lors de l'execution :\n{str(e)}")
@@ -18,6 +18,13 @@ def lancer_clean(nom_fichier):
         QMessageBox.information(None, "Nettoyage terminé", f"Fichiers export_bom.csv et prio.csv générés depuis : {nom_fichier}.csv")
     except Exception as e:
         QMessageBox.critical(None, "Erreur", f"Erreur lors du nettoyage :\n{str(e)}")
+        
+def lancer_source(nom_fichier, nom_source):
+    try:
+        get_nomenclature(nom_fichier, 1, nom_source)
+        QMessageBox.information(None, "Succès", f"Traitement (avec source) lancé pour :\n{nom_source}\n→ {nom_fichier}.csv")
+    except Exception as e:
+        QMessageBox.critical(None, "Erreur", f"Erreur lors de l'execution :\n{str(e)}")
 
 class MonInterface(QWidget):
     def __init__(self):
@@ -42,7 +49,7 @@ class MonInterface(QWidget):
         layout.addWidget(self.url_label)
         layout.addWidget(self.url_input)
 
-        self.fichier_label = QLabel("Nom du fichier CSV :")
+        self.fichier_label = QLabel("Nom du fichier CSV de sortie :")
         self.fichier_input = QLineEdit()
         layout.addWidget(self.fichier_label)
         layout.addWidget(self.fichier_input)
@@ -50,6 +57,20 @@ class MonInterface(QWidget):
         self.ok_button = QPushButton("OK")
         self.ok_button.clicked.connect(self.valider)
         layout.addWidget(self.ok_button)
+
+        self.source_label = QLabel("Nom du fichier CSV source :")
+        self.source_input = QLineEdit()
+        layout.addWidget(self.source_label)
+        layout.addWidget(self.source_input)
+        
+        self.fichier2_label = QLabel("Nom du fichier CSV de sortie :")
+        self.fichier2_input = QLineEdit()
+        layout.addWidget(self.fichier2_label)
+        layout.addWidget(self.fichier2_input)
+
+        self.source_button = QPushButton("Ok")
+        self.source_button.clicked.connect(self.lancer_avec_source)
+        layout.addWidget(self.source_button)
 
         self.setLayout(layout)
 
@@ -71,6 +92,16 @@ class MonInterface(QWidget):
             return
 
         lancer_clean(nom_fichier)
+    
+    def lancer_avec_source(self):
+        nom_fichier = self.fichier2_input.text()
+        nom_source = self.source_input.text()
+
+        if not nom_fichier or not nom_source:
+            QMessageBox.warning(self, "Champs manquants", "Merci de remplir tous les champs pour le traitement avec source.")
+            return
+
+        lancer_source(nom_fichier, nom_source)
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
