@@ -5,3 +5,6 @@ black_list.py
 test.txt
 *.csv
 /__pycache__/
+/dist/
+/build/
+main.spec
