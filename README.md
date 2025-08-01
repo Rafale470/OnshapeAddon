@@ -40,6 +40,7 @@ INSTALLATION
     -   collection
     -   csv
     -   math
+    -   warnings
 
    commande d'installation : pip install [dépendance]
    ex : pip install pandas 

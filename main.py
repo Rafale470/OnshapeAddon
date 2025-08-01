@@ -4,6 +4,7 @@ from PyQt5.QtWidgets import (
 )
 from nomenclature import get_nomenclature
 from init import clean
+import warnings
 
 def lancer_traitement(url, nom_fichier):
     """
@@ -147,6 +148,7 @@ class MonInterface(QWidget):
 
 if __name__ == "__main__":
     # Démarrage de l'application PyQt
+    warnings.simplefilter(action='ignore', category=FutureWarning)
     app = QApplication(sys.argv)
     fenetre = MonInterface()
     fenetre.show()
